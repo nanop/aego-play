@@ -1,0 +1,12 @@
+@(stories: List[Story])
+@main("Index") {
+<ul>
+    @stories.map { story =>
+    <li>
+        @story.name
+        @story.master.alias
+    </li>
+    }
+</ul>
+<a href="@routes.Application.index">Cancel</a>
+}

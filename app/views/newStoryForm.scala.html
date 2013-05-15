@@ -1,0 +1,11 @@
+@(newStoryForm: Form[Story])
+@import helper._
+
+@main("Where everything began") {
+    @form(routes.Application.newStory) {
+        @inputText(newStoryForm("Story title"))
+        @inputText(newStoryForm("Avatar name"))
+        <input type="submit" value="create">
+    }
+    <a href="@routes.Application.index">Cancel</a>
+}
