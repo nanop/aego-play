@@ -19,4 +19,4 @@ case class User(email: String,
                 readerOfStories: Seq[Story],
                 tellerOfStories: Seq[Story],
                 masterOfStories: Seq[Story],
-                tags: Map[String, Seq[String]])
+                tags: Map[String, Set[String]])

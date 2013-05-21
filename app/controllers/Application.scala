@@ -3,32 +3,36 @@ package controllers
 import play.api.mvc._
 import play.api.data._
 import play.api.data.Forms._
-import reactivemongo.api._
 import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.collection.JSONCollection
-import play.api.libs.json._
-import models._
+import java.awt.Color
+import models.{StoryTeller, Story}
 import models.JsonFormats._
-
+import play.api.libs.Codecs
+import java.util.Date
+import play.api.libs.json.Json
+import reactivemongo.api.Cursor
 
 object Application extends Controller with MongoController {
 
   /**
+   * Persistent collection of stories.
+   */
+  private def stories: JSONCollection = db.collection[JSONCollection]("stories")
+
+  /**
    * New story form with mapping and constraints.
    */
-  val newStoryForm = Form(
-    mapping("Story title" -> nonEmptyText, "Avatar name" -> nonEmptyText)
-      ((title, name) => Story(title, StoryTeller(name)))
-      (story => Some(story.name, story.master.alias)))
-
-  /*
-* Get a JSONCollection (a Collection implementation that is designed to work
-* with JsObject, Reads and Writes.)
-* Note that the `stories` is not a `val`, but a `def`. We do _not_ store
-* the stories reference to avoid potential problems in development with
-* Play hot-reloading.
-*/
-  def stories: JSONCollection = db.collection[JSONCollection]("stories")
+  private val newStoryForm = Form(
+    mapping(
+      "title" -> nonEmptyText,
+      "master" -> nonEmptyText,
+      "public" -> boolean,
+      "adult" -> boolean,
+      "tags" -> text)
+      ((title, master, public, adult, tags) => Story.create(title, public, adult, tags.split(","), master))
+      (story => Some(story.title, story.master.alias, story.public, story.adult, story.tags.mkString(",")))
+  )
 
   /**
    * Shows the index page.
@@ -51,7 +55,6 @@ object Application extends Controller with MongoController {
    */
   def showNewStoryForm = Action(Ok(views.html.newStoryForm(newStoryForm)))
 
-
   /**
    * Creates a new story.
    * @return The action.
@@ -63,7 +66,7 @@ object Application extends Controller with MongoController {
         data => {
           val insertFuture = stories.insert(data)
           Async {
-            insertFuture map (_ => Redirect(routes.Application.index()))
+            insertFuture map (_ => Ok(views.html.index()))
           }
         }
       )
