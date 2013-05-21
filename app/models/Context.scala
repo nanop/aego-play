@@ -1,11 +1,17 @@
 package models
 
+import play.api.libs.json.Json
+
 /**
  * Context of the text of a {@link Phrase}.
  *
  * @author jupi
  */
 case class Context(ctx: String)
+
+object Context {
+  implicit val format = Json.format[Context]
+}
 
 /**
  * Rule of an RPG or a convention of a Story.

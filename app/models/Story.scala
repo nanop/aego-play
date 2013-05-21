@@ -3,6 +3,7 @@ package models
 import play.api.libs.Codecs
 import java.util.Date
 import java.awt.Color
+import play.api.libs.json.Json
 
 /**
  * <p>Domain class of a story.</p>
@@ -63,4 +64,6 @@ object Story {
   def create(title: String, public: Boolean, adult: Boolean, tags: Seq[String], masterAlias: String) =
     Story(Codecs.md5((title + masterAlias + new Date().getTime) getBytes),
       title, public, adult, tags, StoryTeller(masterAlias, DEFAULT_COLOR))
+
+  implicit val format = Json.format[Story]
 }

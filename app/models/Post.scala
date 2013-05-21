@@ -1,5 +1,7 @@
 package models
 
+import play.api.libs.json.Json
+
 /**
  * Domain class for storing the properties of a post of a story.
  *
@@ -11,3 +13,7 @@ package models
  * @author jupi
  */
 case class Post(storyteller: StoryTeller, timestamp: Long, phrases: Seq[Phrase], storyId: String)
+
+object Post {
+  implicit val format = Json.format[Post]
+}

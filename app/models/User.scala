@@ -1,5 +1,7 @@
 package models
 
+import play.api.libs.json.Json
+
 /**
  * Domain class for storing the properties of a user.
  *
@@ -20,3 +22,7 @@ case class User(email: String,
                 tellerOfStories: Seq[Story],
                 masterOfStories: Seq[Story],
                 tags: Map[String, Set[String]])
+
+object User {
+  implicit val format = Json.format[User]
+}
