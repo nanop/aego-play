@@ -7,7 +7,12 @@ import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import models._
 import play.api.libs.json.Json
+import play.api.libs.json.Json._
 import reactivemongo.api.Cursor
+import play.api.libs.Codecs
+import java.util.Date
+import scala.concurrent.Await
+import scala.concurrent.duration.Duration
 
 object Application extends Controller with MongoController {
 
@@ -15,6 +20,8 @@ object Application extends Controller with MongoController {
    * Persistent collection of stories.
    */
   private def stories: JSONCollection = db.collection[JSONCollection]("stories")
+
+  private final val TIMEOUT = Duration("2 seconds")
 
   /**
    * New story form with mapping and constraints.
@@ -26,9 +33,16 @@ object Application extends Controller with MongoController {
       "public" -> boolean,
       "adult" -> boolean,
       "tags" -> text)
-      ((title, master, public, adult, tags) => Story.create(title, public, adult, tags.split(","), master))
+      ((title, master, public, adult, tags) =>
+        Story.create(generateStoryId(title), title, public, adult, tags.split(","), master))
       (story => Some(story.title, story.master.alias, story.public, story.adult, story.tags.mkString(",")))
   )
+
+  def generateStoryId(title: String): String = {
+    def unique(id: String): Boolean = Await.result(stories.find(Json.obj("id" -> id)).one[Story], TIMEOUT).isEmpty
+    val storyId = Codecs.md5((title + new Date().getTime) getBytes).substring(0, 10)
+    if (unique(storyId)) storyId else generateStoryId(title)
+  }
 
   /**
    * Shows the index page.
@@ -67,5 +81,7 @@ object Application extends Controller with MongoController {
         }
       )
   }
+
+
 
 }

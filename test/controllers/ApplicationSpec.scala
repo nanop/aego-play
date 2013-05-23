@@ -50,6 +50,7 @@ class ApplicationSpec extends Specification {
       story.storyTellers must beEmpty
       story.title mustEqual formValues("title")
       story.tags mustEqual formValues("tags").split(",").toSeq
+      println(story.id)
       dropStories
     }
 

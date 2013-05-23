@@ -1,8 +1,5 @@
 package models
 
-import play.api.libs.Codecs
-import java.util.Date
-import java.awt.Color
 import play.api.libs.json.Json
 
 /**
@@ -24,7 +21,7 @@ import play.api.libs.json.Json
  * <p>Readers of a private story can read the posts of the story.
  * The public stories can be read by anybody, so there should be no distinguished users of a public story.<p>
  *
- * @param id Short ID of the story. Should not be the ID of the DB object. This will be shown in URLs.
+ * @param id Short ID of the story, 10 char long hexadecimal hash. This will be shown in URLs.
  * @param title Title of the story.
  * @param public Public flag. Indicates that all users can read the story.
  * @param adult Adult content flag.
@@ -52,18 +49,20 @@ object Story {
    */
   val DEFAULT_COLOR = "#000000"
 
+  implicit val format = Json.format[Story]
+
   /**
    * Create a new Story without readers and story tellers.
+   * The story ID may collide with other story ID. Further collision check needed before DB inserts.
    *
+   * @param id Short unique ID of the story.
    * @param title Title of the story.
    * @param public If anyone can read the story it should be true.
    * @param adult If the story contains adult content it should be true.
    * @param tags Tags of the story.
    * @param masterAlias Alias name of the master of the story.
    */
-  def create(title: String, public: Boolean, adult: Boolean, tags: Seq[String], masterAlias: String) =
-    Story(Codecs.md5((title + masterAlias + new Date().getTime) getBytes),
-      title, public, adult, tags, StoryTeller(masterAlias, DEFAULT_COLOR))
+  def create(id: String, title: String, public: Boolean, adult: Boolean, tags: Seq[String], masterAlias: String) =
+    Story(id, title, public, adult, tags, StoryTeller(masterAlias, DEFAULT_COLOR))
 
-  implicit val format = Json.format[Story]
 }
