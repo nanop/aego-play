@@ -1,6 +1,38 @@
-@main("Index") {
+@(user: Option[String] = None)(implicit lang: Lang)
+
+@main(Messages("app.title"), "nav-index"){
+<div class="jumbotron">
+    <h1>@Messages("aego")</h1>
+    <p class="lead">@Messages("app.title2")</p>
+</div>
+<div class="row">
+    <div class="span4">
+        <h2>@Messages("about")</h2>
+        <p>@Messages("d.about")</p>
+        <p><a class="btn" href="#">@Messages("user_guide")</a></p>
+    </div>
+    <div class="span4">
+        <h2>@Messages("stories")</h2>
+        <p>@Messages("d.stories")</p>
+        <p><a class="btn" href="@routes.Application.showStories">@Messages("story_list")</a></p>
+    </div>
+    <div class="span4">
+        @user match {
+            case None => {
+        <h2>@Messages("sign_in")</h2>
+        <p>@Messages("d.sign_in")</p>
+        <p><a class="btn btn-primary" href="@routes.Application.loginPage">@Messages("sign_in")</a></p>
+            }
+            case _ => {
+        <h2>@Messages("sign_out")</h2>
+        <p>@Messages("d.sign_out")</p>
+        <p><a class="btn btn-primary" href="@routes.Application.loginPage">@Messages("sign_out")</a></p>
+            }
+        }
+    </div>
+</div>
+TODO
 <ul>
-    <li><a href="@routes.Application.showNewStoryForm">Create chat room</a></li>
-    <li><a href="@routes.Application.showStories">Stories</a></li>
+    <li>Add javascript to set the active menu item on navbar.</li>
 </ul>
 }

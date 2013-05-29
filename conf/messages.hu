@@ -1,0 +1,36 @@
+## titles, menu items, headers ##
+
+aego=AEGO
+app.title=AEGO / Alter ego: a szerepjáték cset
+app.title2=Alter ego, szerepjáték cset
+new_story.title=AEGO - egy új történet kezdete
+about=Mi ez?
+home=Kezdőlap
+stories=Történetek
+sign_in=Bejelentkezés
+sign_out=Kijelentkezés
+create_story=Új történet
+user_guide=Útmutató
+story_list=Történetlista
+story_title=A történet címe
+alias=Álneved a történetben
+game_master=Kalandmester
+public=Bárki olvashatja
+adult_content_enabled=Felnőtt tartalom
+tags=Címkék
+create=Létrehoz
+title=Cím
+started_by=Indította
+sign_in_google=Google bejelentkezés
+sign_in_openid=OpenID bejelentkezés
+
+## messages ##
+
+## definitions, notes, descriptions, long sentences ##
+d.about=Az Aego egy ingyenes cset alkalmazás, speciálisan szerepjátszásra és közös történetírásra tervezve.
+d.stories=Csodás történetekhez és kaladokhoz csatlakozahtsz játékosként vagy társszerzőként. A történetek a hagyományos csetek szobáinak felelnek meg.
+d.sign_in=A kalandokban való részvétehez be kell jelentkezned. Google vagy más OpenID azonosítóval jelentkezhetsz be. Az Aego nem gyűjt és nem tárol személyes adatokat.
+d.sign_out=Ne felejts el kijelentkezni közösen használt számítógép esetén.
+
+## Untranslated / special ##
+language=magyar

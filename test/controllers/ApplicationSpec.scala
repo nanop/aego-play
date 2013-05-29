@@ -33,11 +33,11 @@ class ApplicationSpec extends Specification {
 
     "create a new story with some valid test data" in new WithApplication(FakeApplication()) {
       dropStories
-      val formValues = Map("title" -> "test story",
+      val formValues = Map("title" -> "test story őűŐŰ",
       "public" -> true.toString,
       "adult" -> false.toString,
       "tags" -> "apple,pear,shadow of darkness,árvíztűrő tükörfúrógép",
-      "master" -> "Shinobi")
+      "master" -> "GM")
       val result = Application.newStory()(FakeRequest().withFormUrlEncodedBody(formValues.toSeq: _*))
       status(result) mustEqual 200
       Await.result(db.command(Count("stories")), timeout) mustEqual 1

@@ -1,0 +1,39 @@
+## titles, menu items, headers ##
+
+aego=AEGO
+app.title=AEGO / Alter ego: the ultimate RPG chat
+app.title2=Alter ego, the ultimate RPG chat
+new_story.title=AEGO - a new beginning
+about=About
+home=Home
+stories=Stories
+sign_in=Sign in
+sign_out=Sign out
+create_story=Start a new story
+user_guide=User guide
+story_list=List of stories
+story_title=Title of the story
+alias=Your alias name
+game_master=GM
+public=Anyone can read
+adult_content_enabled=Adult content
+tags=Tags
+create=Create
+title=Title
+started_by=Started by
+sign_in_google=Google sign in
+sign_in_openid=OpenID sign in
+
+## messages ##
+
+## definitions, notes, descriptions, long sentences ##
+d.about=Aego is a free chat application. Aego is designed to support playing role playing games.
+d.stories=There are some wonderful ongoing stories and adventures you can join with your alter egos to play or co-author. Stories are like chatrooms of other chats apps.
+d.sign_in=To be engaged in fascinating adventures you should sign in. You can sign in with your facebook, twitter or tumblr account. This application will not store any personal information and will not publish unwanted content to social networks.
+d.sign_out=Do not forget to sign out on public machines.
+
+## Untranslated / special ##
+language=english
+hu=magyar
+en=english
+openid_url=OpenID URL

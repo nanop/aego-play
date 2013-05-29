@@ -1,13 +1,23 @@
 # Routes
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
-GET     /               controllers.Application.index
 
-GET     /stories        controllers.Application.showStories
+GET     /           controllers.Application.index
+GET     /stories    controllers.Application.showStories
 GET     /stories/new    controllers.Application.showNewStoryForm
-#GET     /stories/:storyId          controllers.Application.postsx
-#GET     /stories/:storyId/posts     controllers.Application.posts(storyId: String
 POST    /stories/new    controllers.Application.newStory
+GET     /stories/:storyId   controllers.Application.showStoryBoard(storyId: String)
+POST    /stories/:storyId   controllers.Application.showPosts(storyId: String)
+GET     /stories/:storyId/after/:timestamp  controllers.Application.getPosts(storyId: String, timestamp: Long)
+POST    /stories/:storyId/post  controllers.Application.submitPost(storyId: String)
+GET     /sign-in    controllers.Application.loginPage
+GET     /language/:lang     controllers.Application.changeLanguage(lang: String)
+POST    /sign-in-openid    controllers.Application.signInOpenId
+GET    /sign-in-google    controllers.Application.signInGoogle
+GET     /openid     controllers.Application.openIdCallback
+
+# JUST for development, TODO remove
+GET     /cleanDB    controllers.Application.cleanDb
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

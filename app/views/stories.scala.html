@@ -1,12 +1,33 @@
-@(stories: List[Story])
-@main("Index") {
-<ul>
-    @stories.map { story =>
-    <li>
-        @story.title
-        @story.master.alias
-    </li>
+@(stories: List[Story])(implicit lang: Lang)
+
+@toYesNo(l: Boolean) = {
+    @l match {
+        case true => {Yes}
+        case _ => {No}
     }
-</ul>
-<a href="@routes.Application.index">Cancel</a>
+}
+
+@main(Messages("stories"), "nav-stories") {
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>@Messages("title")</th>
+                <th>@Messages("started_by")</th>
+                <th>@Messages("public")</th>
+                <th>@Messages("adult_content_enabled")</th>
+                <th>@Messages("tags")</th>
+            </tr>
+        </thead>
+        <tbody>
+        @stories.map { story =>
+            <tr>
+                <td><a href="@routes.Application.showStoryBoard(story.id)">@story.title</a></td>
+                <td>@story.master.alias</td>
+                <td>@toYesNo(story.public)</td>
+                <td>@toYesNo(story.adult)</td>
+                <td>@story.tags.mkString(", ")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
 }

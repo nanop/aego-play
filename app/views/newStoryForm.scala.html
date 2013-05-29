@@ -1,12 +1,20 @@
-@(newStoryForm: Form[Story])
+@(newStoryForm: Form[Story])(implicit lang: Lang)
 @import helper._
 @import helper.twitterBootstrap._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
-@main("Where everything began") {
-    @form(routes.Application.newStory) {
-        @inputText(newStoryForm("title"), '_label -> "Story title")
-        @inputText(newStoryForm("master"), '_label -> "Your alias name")
-        <input type="submit" value="create">
+@main(Messages("new_story.title"), "nav-create-story") {
+    <div class="span8 offset2">
+    @form(routes.Application.newStory, 'class -> "form-horizontal well") {
+        @inputText(newStoryForm("title"), '_label -> Messages("story_title"))
+        @inputText(newStoryForm("master"), '_label -> Messages("alias"), '_placeholder -> Messages("game_master"))
+        @checkbox(newStoryForm("public"), '_label -> Messages("public"))
+        @checkbox(newStoryForm("adult"), '_label -> Messages("adult_content_enabled"))
+        @inputText(newStoryForm("tags"), '_label -> Messages("tags"))
+        <p>TODO: add captcha</p>
+        <div class="form-actions">
+            <input type="submit" class="btn btn-primary" value="@Messages("create")">
+        </div>
     }
-    <a href="@routes.Application.index">Cancel</a>
+    </div>
 }
