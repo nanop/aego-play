@@ -1,28 +1,33 @@
 package models
 
 import play.api.libs.json.Json
+import java.util.Date
 
 /**
  * Domain class for storing the properties of a user.
  *
- * @param email Email of log in.
+ * @param openId OpenID of the user.
  * @param username Public, general user name.
+ * @param email Email of log in.
  * @param online Online state.
  * @param readerOfStories The user has read access of these stories, with other words, the user is a reader of the specified stories.
  * @param tellerOfStories The user has r/w access of these stories, with other words, the user is a story teller of the specified stories.
  * @param masterOfStories The user is the master of the specified stories (r/w access, more rights than a story teller).
- * @param tags Tags in (key => (list of values)) format. Name, email, tokens, language is stored as tags to be more dynamic.
  *
  * @author jupi
  */
-case class User(email: String,
+case class User(openId: String,
                 username: String,
+                email: String,
+                birthday: Date,
                 online: Boolean,
                 readerOfStories: Seq[Story],
                 tellerOfStories: Seq[Story],
-                masterOfStories: Seq[Story],
-                tags: Map[String, Set[String]])
+                masterOfStories: Seq[Story])
 
 object User {
   implicit val format = Json.format[User]
+
+  def create(openId: String, username: String, email: String, birthday: Date) =
+    User(openId, username, email, birthday, true, Nil, Nil, Nil)
 }

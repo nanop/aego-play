@@ -1,38 +1,34 @@
-@(user: Option[String] = None)(implicit lang: Lang)
+@(user: Option[String] = None)(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@import hu.jupi.play.authentication._
 
 @main(Messages("app.title"), "nav-index"){
-<div class="jumbotron">
-    <h1>@Messages("aego")</h1>
-    <p class="lead">@Messages("app.title2")</p>
+<div class="text-center">
+    <img src="@routes.Assets.at("img/aego600.png")" alt="Aego 600dpi logo" style="vertical-align: top"/>
 </div>
 <div class="row">
     <div class="span4">
-        <h2>@Messages("about")</h2>
-        <p>@Messages("d.about")</p>
+        <h3>@Messages("about")</h3>
+        <p>@Html(Messages("d.about"))</p>
         <p><a class="btn" href="#">@Messages("user_guide")</a></p>
     </div>
     <div class="span4">
-        <h2>@Messages("stories")</h2>
+        <h3>@Messages("stories")</h3>
         <p>@Messages("d.stories")</p>
-        <p><a class="btn" href="@routes.Application.showStories">@Messages("story_list")</a></p>
+        <p><a class="btn" href="@routes.Application.storiesAction">@Messages("story_list")</a></p>
     </div>
     <div class="span4">
         @user match {
             case None => {
-        <h2>@Messages("sign_in")</h2>
+        <h3>@Messages("sign_in")</h3>
         <p>@Messages("d.sign_in")</p>
-        <p><a class="btn btn-primary" href="@routes.Application.loginPage">@Messages("sign_in")</a></p>
+        <p><a class="btn btn-primary" href="@routes.Application.loginPageAction">@Messages("sign_in")</a></p>
             }
             case _ => {
-        <h2>@Messages("sign_out")</h2>
+        <h3>@Messages("sign_out")</h3>
         <p>@Messages("d.sign_out")</p>
-        <p><a class="btn btn-primary" href="@routes.Application.loginPage">@Messages("sign_out")</a></p>
+        <p><a class="btn btn-primary" href="@routes.Application.loginPageAction">@Messages("sign_out")</a></p>
             }
         }
     </div>
 </div>
-TODO
-<ul>
-    <li>Add javascript to set the active menu item on navbar.</li>
-</ul>
 }

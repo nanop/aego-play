@@ -1,9 +1,8 @@
 ## titles, menu items, headers ##
 
-aego=AEGO
-app.title=AEGO / Alter ego: a szerepjáték cset
-app.title2=Alter ego, szerepjáték cset
-new_story.title=AEGO - egy új történet kezdete
+aego=aego
+app.title=alter ego, a szerepjáték cset
+new_story.title=aego - egy új történet kezdete
 about=Mi ez?
 home=Kezdőlap
 stories=Történetek
@@ -23,11 +22,14 @@ title=Cím
 started_by=Indította
 sign_in_google=Google bejelentkezés
 sign_in_openid=OpenID bejelentkezés
+or=vagy
+yes=Igen
+no=Nem
 
 ## messages ##
 
 ## definitions, notes, descriptions, long sentences ##
-d.about=Az Aego egy ingyenes cset alkalmazás, speciálisan szerepjátszásra és közös történetírásra tervezve.
+d.about=Az <b>aego ingyenes cset</b> web alkalmazás és platform, speciálisan <b>szerepjátékra</b> és <b>közösségi történetírásra</b> tervezve.
 d.stories=Csodás történetekhez és kaladokhoz csatlakozahtsz játékosként vagy társszerzőként. A történetek a hagyományos csetek szobáinak felelnek meg.
 d.sign_in=A kalandokban való részvétehez be kell jelentkezned. Google vagy más OpenID azonosítóval jelentkezhetsz be. Az Aego nem gyűjt és nem tárol személyes adatokat.
 d.sign_out=Ne felejts el kijelentkezni közösen használt számítógép esetén.

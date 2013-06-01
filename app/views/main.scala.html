@@ -1,9 +1,10 @@
-@(title: String, activeNavId: String, user: Option[String] = None)(content: Html)(implicit lang: Lang)
+@(title: String, activeNavId: String)(content: Html)(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@import hu.jupi.play.authentication._
 
 <!DOCTYPE html>
 <html>
     <head>
-        <title>@title</title>
+        <title>@(Messages("aego") + " - " + title)</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")" />
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")" />
         <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap-responsive.min.css")" />
@@ -19,31 +20,33 @@
         <div class="container">
             <div class="masthead">
                 <ul class="nav nav-pills pull-right">
-                    <li id="nav-index"><a href="@routes.Application.index">@Messages("home")</a></li>
-                    <li id="nav-stories"><a href="@routes.Application.showStories">@Messages("stories")</a></li>
-                @if(!user.isEmpty) {
-                    <li id="nav-create-story"><a href="@routes.Application.showNewStoryForm">@Messages("create_story")</a></li>
+                    <li id="nav-index"><a href="@routes.Application.indexAction">@Messages("home")</a></li>
+                    <li id="nav-stories"><a href="@routes.Application.storiesAction">@Messages("stories")</a></li>
+                @auth match {
+                    case Authenticated(user) => {
+                    <li id="nav-create-story"><a href="@routes.Application.newStoryFormAction">@Messages("create_story")</a></li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            @user.get <b class="caret"></b>
+                            @user <b class="caret"></b>
                         </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@routes.Application.signOutAction">@Messages("sign_out")</a></li>
+                        </ul>
                     </li>
-                    <ul class="dropdown-menu">
-                        <li><a href="@routes.Application.loginPage">@Messages("sign_out")</a></li>
-                    </ul>
-                } else {
-                    <li id="nav-sign-in"><a href="@routes.Application.loginPage">@Messages("sign_in")</a></li>
+                    } case _ => {
+                        <li id="nav-sign-in"><a href="@routes.Application.loginPageAction">@Messages("sign_in")</a></li>
+                    }
                 }
                 </ul>
-                <h3 class="muted" style="display: inline; vertical-align: top">@Messages("aego")</h3>
+                <img src="@routes.Assets.at("img/aego150-nf.png")" alt="Aego 150dpi logo" style="vertical-align: top"/>
                 <ul class="nav nav-pills" style="display: inline-block">
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                             @Messages("language") <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="@routes.Application.changeLanguage("en")">@Messages("en")</a></li>
-                            <li><a href="@routes.Application.changeLanguage("hu")">@Messages("hu")</a></li>
+                            <li><a href="@routes.Application.changeLanguageAction("en")">@Messages("en")</a></li>
+                            <li><a href="@routes.Application.changeLanguageAction("hu")">@Messages("hu")</a></li>
                         </ul>
                     </li>
                 </ul>

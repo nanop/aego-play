@@ -1,9 +1,10 @@
-@(stories: List[Story])(implicit lang: Lang)
+@(stories: List[Story])(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@import hu.jupi.play.authentication._
 
 @toYesNo(l: Boolean) = {
     @l match {
-        case true => {Yes}
-        case _ => {No}
+        case true => {@Messages("yes")}
+        case _ => {@Messages("no")}
     }
 }
 
@@ -21,7 +22,7 @@
         <tbody>
         @stories.map { story =>
             <tr>
-                <td><a href="@routes.Application.showStoryBoard(story.id)">@story.title</a></td>
+                <td><a href="@routes.Application.storyBoardAction(story.id)">@story.title</a></td>
                 <td>@story.master.alias</td>
                 <td>@toYesNo(story.public)</td>
                 <td>@toYesNo(story.adult)</td>

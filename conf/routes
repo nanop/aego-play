@@ -2,22 +2,27 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-GET     /           controllers.Application.index
-GET     /stories    controllers.Application.showStories
-GET     /stories/new    controllers.Application.showNewStoryForm
-POST    /stories/new    controllers.Application.newStory
-GET     /stories/:storyId   controllers.Application.showStoryBoard(storyId: String)
-POST    /stories/:storyId   controllers.Application.showPosts(storyId: String)
-GET     /stories/:storyId/after/:timestamp  controllers.Application.getPosts(storyId: String, timestamp: Long)
-POST    /stories/:storyId/post  controllers.Application.submitPost(storyId: String)
-GET     /sign-in    controllers.Application.loginPage
-GET     /language/:lang     controllers.Application.changeLanguage(lang: String)
-POST    /sign-in-openid    controllers.Application.signInOpenId
-GET    /sign-in-google    controllers.Application.signInGoogle
-GET     /openid     controllers.Application.openIdCallback
+GET     /                   controllers.Application.indexAction
+GET     /stories            controllers.Application.storiesAction
+GET     /stories/new        controllers.Application.newStoryFormAction
+POST    /stories/new        controllers.Application.newStoryAction
+GET     /stories/:storyId   controllers.Application.storyBoardAction(storyId: String)
+#POST    /stories/:storyId   controllers.Application.postsAction(storyId: String)
+GET     /stories/:storyId/after/:timestamp  controllers.Application.postsAction(storyId: String, timestamp: Long)
+POST    /stories/:storyId/post              controllers.Application.submitPostAction(storyId: String)
+GET     /sign-in            controllers.Application.loginPageAction
+GET     /language/:lang     controllers.Application.changeLanguageAction(lang: String)
+POST    /sign-in-openid     controllers.Application.signInOpenIdAction
+GET     /sign-in-google     controllers.Application.signInGoogleAction
+GET     /sign-out           controllers.Application.signOutAction
+GET     /openid             controllers.Application.openIdCallbackAction
+GET     /profile            controllers.Application.profileAction
+GET     /profile/new        controllers.Application.profileFormAction
+GET     /profile/edit       controllers.Application.profileFormAction
+POST    /profile/new        controllers.Application.createProfileAction
 
 # JUST for development, TODO remove
-GET     /cleanDB    controllers.Application.cleanDb
+GET     /cleanDB    controllers.Application.cleanDbAction
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)

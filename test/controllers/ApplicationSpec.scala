@@ -25,7 +25,7 @@ class ApplicationSpec extends Specification {
 
     "not create new story without data" in new WithApplication(FakeApplication()) {
       dropStories
-      val result = Application.newStory()(FakeRequest())
+      val result = Application.newStoryAction()(FakeRequest())
       status(result) mustEqual 400
       Await.result(db.command(Count("stories")), timeout) mustEqual 0
       dropStories
@@ -38,7 +38,7 @@ class ApplicationSpec extends Specification {
       "adult" -> false.toString,
       "tags" -> "apple,pear,shadow of darkness,árvíztűrő tükörfúrógép",
       "master" -> "GM")
-      val result = Application.newStory()(FakeRequest().withFormUrlEncodedBody(formValues.toSeq: _*))
+      val result = Application.newStoryAction()(FakeRequest().withFormUrlEncodedBody(formValues.toSeq: _*))
       status(result) mustEqual 200
       Await.result(db.command(Count("stories")), timeout) mustEqual 1
       val story = Await.result(stories.find(Json.obj()).one[Story], timeout).get

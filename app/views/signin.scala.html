@@ -1,0 +1,21 @@
+@(signInForm: Form[String])(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@import hu.jupi.play.authentication._
+@import helper.{form,inputText}
+@import helper.twitterBootstrap._
+
+@main(Messages("sign_in"), "nav-sign-in") {
+    <div class="span8 offset2">
+        <h3>@Messages("sign_in")</h3>
+        <div class="well text-center">
+            <img src="@routes.Assets.at("img/google.png")" alt="google logo" onclick="location.href='@routes.Application.signInGoogleAction'" />
+            <button class="btn btn-info" onclick="location.href='@routes.Application.signInGoogleAction'">@Messages("sign_in_google")</button>
+        </div>
+        <p class="text-center" style="margin-bottom: 20px">@Messages("or")</p>
+        @form(routes.Application.signInOpenIdAction, 'class -> "form-inline well text-center") {
+            <img src="@routes.Assets.at("img/openid.png")" alt="OpenID logo" />
+            <input type="text" id="openId" name="openId" value="@signInForm.data.get("openId")"
+                class="span3" placeholder="@Messages("openid_url")">
+            <input type="submit" class="btn btn-warning" value="@Messages("sign_in_openid")">
+        }
+    </div>
+}

@@ -12,7 +12,7 @@ object ApplicationBuild extends Build {
   )
 
   val main = play.Project(appName, appVersion, appDependencies).settings(
-    javaOptions in Test += "-Dconfig.file=conf/test.conf"
+    javaOptions in Test += "-Dconfig.file=conf/test.local.conf"
   )
 
 }

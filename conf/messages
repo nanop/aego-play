@@ -1,8 +1,7 @@
 ## titles, menu items, headers ##
 
-aego=AEGO
-app.title=AEGO / Alter ego: the ultimate RPG chat
-app.title2=Alter ego, the ultimate RPG chat
+aego=aego
+app.title=alter ego, the ultimate RPG chat
 new_story.title=AEGO - a new beginning
 about=About
 home=Home
@@ -23,6 +22,9 @@ title=Title
 started_by=Started by
 sign_in_google=Google sign in
 sign_in_openid=OpenID sign in
+or=or
+yes=Yes
+no=No
 
 ## messages ##
 
