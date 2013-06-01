@@ -96,12 +96,10 @@ object Application extends Controller with MongoController with Authentication[U
   override def principal(rh: RequestHeader): Future[Option[User]] = {
     val id = rh.session.get(OPEN_ID_SESSION_KEY)
     if (id isEmpty) {
-      LOG.debug("No session ID, guest user")
       Promise[Option[User]]().success(None).future
     } else {
       users.find(Json.obj("openId" -> id)).one[User] map {
         user =>
-          LOG.debug("Success, principal: {}", user)
           user
       } recover {
         case t: Throwable => {
