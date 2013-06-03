@@ -1,8 +1,6 @@
 package controllers
 
 import play.api.mvc._
-import play.api.data._
-import play.api.data.Forms._
 import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import models._
@@ -11,15 +9,18 @@ import play.api.libs.json.Json._
 import reactivemongo.api.Cursor
 import play.api.libs.Codecs
 import java.util.Date
-import scala.concurrent.duration.Duration
 import play.api.i18n.Lang
 import play.api.Play.current
 import play.api.libs.openid.OpenID
-import scala.concurrent.{Promise, Future, Await}
+import scala.concurrent.Future
 import play.api.Logger
 import hu.jupi.play.authentication.Authentication
 
 object Application extends Controller with MongoController with Authentication[User] {
+
+  private final val GOOGLE_OPEN_ID_URL = "https://www.google.com/accounts/o8/id"
+  private final val OPEN_ID_SESSION_KEY = "user"
+  private final val LOG = Logger.logger
 
   /**
    * Persistent collection of stories.
@@ -31,60 +32,6 @@ object Application extends Controller with MongoController with Authentication[U
    */
   private def users: JSONCollection = db.collection[JSONCollection]("users")
 
-  private final val TIMEOUT = Duration("2 seconds")
-  private final val GOOGLE_OPEN_ID_URL = "https://www.google.com/accounts/o8/id"
-  private final val OPEN_ID_SESSION_KEY = "user"
-  private final val LOG = Logger.logger
-
-  private object Forms {
-
-    /**
-     * New story form with mapping and constraints.
-     */
-    val newStory = Form(
-      mapping(
-        "title" -> nonEmptyText,
-        "master" -> nonEmptyText,
-        "public" -> boolean,
-        "adult" -> boolean,
-        "tags" -> text)
-        ((title, master, public, adult, tags) =>
-          Story.create(generateStoryId(title), title, public, adult, toTags(tags), master))
-        (story => Some(story.title, story.master.alias, story.public, story.adult, story.tags.mkString(",")))
-    )
-
-    /**
-     * Sign in form, the user can enter only her OpenID.
-     */
-    val signIn = Form(
-      single("openId" -> text)
-    )
-
-    /**
-     * Create/edit profile form.
-     */
-    val profileForm = Form(
-      mapping(
-        "openId" -> nonEmptyText,
-        "username" -> nonEmptyText,
-        "email" -> nonEmptyText,
-        "birthday" -> date)
-        (User.create)(u => Some(u.openId, u.username, u.email, u.birthday))
-    )
-  }
-
-  /**
-   * Convert a string to sequence of tags. A tag should not be null or empty and cannot begin or end with whitespaces.
-   *
-   * @param s A string which contains all the tags separated by commas (,) or optionally spaces around commas.
-   * @return Sequence of tags.
-   */
-  private def toTags(s: String) =
-    for (shard <- s.split(","); tag = shard.trim() if !tag.isEmpty()) yield tag
-
-  private val tellerSettingsForm = Form(
-    tuple("alias" -> nonEmptyText, "color" -> nonEmptyText)
-  )
 
   /**
    * Overriden method of the Authentication trait.
@@ -95,25 +42,23 @@ object Application extends Controller with MongoController with Authentication[U
    */
   override def principal(rh: RequestHeader): Future[Option[User]] = {
     val id = rh.session.get(OPEN_ID_SESSION_KEY)
-    if (id isEmpty) {
-      Promise[Option[User]]().success(None).future
-    } else {
-      users.find(Json.obj("openId" -> id)).one[User] map {
-        user =>
-          user
-      } recover {
-        case t: Throwable => {
-          LOG.debug("DB error on getting principal: {}", t)
-          None
-        }
+    if (id isEmpty) Future(None)
+    else {
+      users.find(Json.obj("openId" -> id)).one[User]
+    } recover {
+      case t: Throwable => {
+        LOG.debug("DB error on getting principal: {}", t)
+        None
       }
     }
   }
 
-  def generateStoryId(title: String): String = {
-    def unique(id: String): Boolean = Await.result(stories.find(Json.obj("id" -> id)).one[Story], TIMEOUT).isEmpty
-    val storyId = Codecs.md5((title + new Date().getTime) getBytes).substring(0, 10)
-    if (unique(storyId)) storyId else generateStoryId(title)
+  def generateStoryId(title: String): Future[String] = {
+    val generated = Codecs.md5((title + new Date().getTime) getBytes).substring(0, 10)
+    for {
+      story <- stories.find(Json.obj("id" -> generated)).one[Story]
+      id <- if (story.isEmpty) Future(generated) else generateStoryId(title)
+    } yield id
   }
 
   /**
@@ -148,11 +93,11 @@ object Application extends Controller with MongoController with Authentication[U
     implicit request =>
       Forms.newStory.bindFromRequest.fold(
         errors => BadRequest(views.html.newStoryForm(errors)),
-        data => {
-          val insertFuture = stories.insert(data)
-          Async {
-            insertFuture map (_ => Ok(views.html.index()))
-          }
+        data => Async {
+          for {
+            id <- generateStoryId(data.title)
+            insert <- stories.insert(data.copy(id = id))
+          } yield Ok(views.html.index())
         }
       )
   }

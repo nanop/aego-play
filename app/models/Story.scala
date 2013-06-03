@@ -53,16 +53,15 @@ object Story {
 
   /**
    * Create a new Story without readers and story tellers.
-   * The story ID may collide with other story ID. Further collision check needed before DB inserts.
+   * Generate ID only on insert.
    *
-   * @param id Short unique ID of the story.
    * @param title Title of the story.
    * @param public If anyone can read the story it should be true.
    * @param adult If the story contains adult content it should be true.
    * @param tags Tags of the story.
    * @param masterAlias Alias name of the master of the story.
    */
-  def create(id: String, title: String, public: Boolean, adult: Boolean, tags: Seq[String], masterAlias: String) =
-    Story(id, title, public, adult, tags, StoryTeller(masterAlias, DEFAULT_COLOR))
+  def create(title: String, public: Boolean, adult: Boolean, tags: Seq[String], masterAlias: String) =
+    Story("", title, public, adult, tags, StoryTeller(masterAlias, DEFAULT_COLOR))
 
 }
