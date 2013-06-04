@@ -26,9 +26,8 @@ import play.api.libs.json.Json
  * @param public Public flag. Indicates that all users can read the story.
  * @param adult Adult content flag.
  * @param tags Tags of the story.
- * @param master Master story teller.
- * @param storyTellers List of story tellers.
- * @param readerIds List of the IDs of the readers.
+ * @param master Alias of master story teller.
+ * @param storyTellers List of story teller aliases.
  *
  * @author jupi
  *
@@ -39,8 +38,7 @@ case class Story(id: String,
                  adult: Boolean = false,
                  tags: Seq[String],
                  master: StoryTeller,
-                 storyTellers: Seq[StoryTeller] = Nil,
-                 readerIds: Seq[String] = Nil)
+                 storyTellers: Seq[StoryTeller] = Nil)
 
 object Story {
 

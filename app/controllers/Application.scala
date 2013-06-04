@@ -1,6 +1,7 @@
 package controllers
 
 import play.api.mvc._
+import play.api.cache.Cache
 import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import models._
@@ -41,15 +42,23 @@ object Application extends Controller with MongoController with Authentication[U
    * @return A Future of an optional user.
    */
   override def principal(rh: RequestHeader): Future[Option[User]] = {
-    val id = rh.session.get(OPEN_ID_SESSION_KEY)
-    if (id isEmpty) Future(None)
-    else {
-      users.find(Json.obj("openId" -> id)).one[User]
-    } recover {
-      case t: Throwable => {
-        LOG.debug("DB error on getting principal: {}", t)
-        None
+    val idOpt = rh.session.get(OPEN_ID_SESSION_KEY)
+    idOpt match {
+      case Some(id) => Cache.getAs[User](id) match {
+        case s: Some[User] => Future(s)
+        case None => {
+          users.find(Json.obj("openId" -> id)).one[User] map { user =>
+            Cache.set(id, user, 1800)
+            user
+          }
+        } recover {
+          case t: Throwable => {
+            LOG.warn("DB error on getting principal: {}", t)
+            None
+          }
+        }
       }
+      case _ => Future(None)
     }
   }
 
@@ -91,15 +100,22 @@ object Application extends Controller with MongoController with Authentication[U
    */
   def newStoryAction = WithAuthentication {
     implicit request =>
-      Forms.newStory.bindFromRequest.fold(
-        errors => BadRequest(views.html.newStoryForm(errors)),
-        data => Async {
-          for {
-            id <- generateStoryId(data.title)
-            insert <- stories.insert(data.copy(id = id))
-          } yield Ok(views.html.index())
-        }
-      )
+      request match {
+        case Authenticated(user: User) =>
+          Forms.newStory.bindFromRequest.fold(
+            errors => BadRequest(views.html.newStoryForm(errors)),
+            data => Async {
+              for {
+                id <- generateStoryId(data.title)
+                story = data.copy(id = id)
+                insertStory <- stories.insert(story)
+                modifier = Json.obj("$addToSet" -> Json.obj("masterOfStories" -> id))
+                updateUser <- users.update(Json.obj("openId" -> user.openId), modifier)
+              } yield Redirect(routes.Application.storyBoardAction(id))
+            }
+          )
+      }
+
   }
 
   /**
@@ -138,7 +154,12 @@ object Application extends Controller with MongoController with Authentication[U
    TODO get previous settings by the settings id of the cookie and prefill the form
    TODO show the form and login panel if required
    */
-  def storyBoardAction(storyId: String) = TODO
+  def storyBoardAction(storyId: String) = WithAuthentication(
+    implicit request => Async {
+      for(story <- stories.find(Json.obj("id" -> storyId)).one[Story])
+      yield Ok(views.html.storyBoard(story.get, Forms.tellerSettingsForm))
+    }
+  )
 
   /**
    * Change a storytellers settings or create a new one.
@@ -164,12 +185,12 @@ object Application extends Controller with MongoController with Authentication[U
    * Cleans all stories from the DB. For testing purposes only.
    * @return Index page.
    */
-  def cleanDbAction = WithAuthentication {
-    implicit request =>
-      Async {
-        stories.drop() map (_ => Ok(views.html.index()))
-      }
-  }
+  def cleanDbAction = WithAuthentication(implicit request => Async {
+    for {
+      dropStories <- stories.drop
+      dropUsers <- users.drop
+    } yield Ok(views.html.index())
+  })
 
   /**
    * Shows the sign-in form.
@@ -218,6 +239,12 @@ object Application extends Controller with MongoController with Authentication[U
    */
   def signOutAction = WithAuthentication {
     implicit request =>
+      request match {
+        case Authenticated(user: User) =>
+          Cache.remove(user.openId)
+        case _ =>
+          LOG.warn("A GUEST user has been signed out.")
+      }
       Redirect(routes.Application.indexAction).withNewSession
   }
 
@@ -231,10 +258,9 @@ object Application extends Controller with MongoController with Authentication[U
         info =>
           users.find(Json.obj("openId" -> info.id)).one[User] map (_ match {
             case Some(user: User) =>
-              Ok(views.html.profile(Forms.profileForm.fill(user))).withSession(OPEN_ID_SESSION_KEY -> user.openId)
+              Redirect(routes.Application.indexAction()).withSession(OPEN_ID_SESSION_KEY -> user.openId)
             case _ => Ok(views.html.createProfile(Forms.profileForm)).withSession(OPEN_ID_SESSION_KEY -> info.id)
-          }
-            )
+          })
       }
     }
   }
@@ -255,7 +281,7 @@ object Application extends Controller with MongoController with Authentication[U
       Forms.profileForm.bindFromRequest() fold(errors => BadRequest(views.html.createProfile(errors)),
         data => Async {
           for (lastError <- users.insert(data.copy(openId = request.session.get(OPEN_ID_SESSION_KEY).get)))
-          yield Redirect(routes.Application.profileAction())
+          yield Redirect(routes.Application.storiesAction())
         })
   }
 

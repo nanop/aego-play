@@ -1,12 +1,6 @@
 @(stories: List[Story])(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
 @import hu.jupi.play.authentication._
-
-@toYesNo(l: Boolean) = {
-    @l match {
-        case true => {@Messages("yes")}
-        case _ => {@Messages("no")}
-    }
-}
+@import tags._
 
 @main(Messages("stories"), "nav-stories") {
     @auth match {
@@ -16,24 +10,25 @@
                 <a class="btn btn-primary cf" href="@routes.Application.newStoryAction">@Messages("create_story")</a>
                 <h4>@Messages("master_of_stories")</h4>
                 <ul>
-                    @user.masterOfStories.foreach { story =>
-                        {<li>@story</li>}
+                    @for(story <- user.masterOfStories) {
+                        <li>@story</li>
                     }
                 </ul>
                 <h4>@Messages("teller_of_stories")</h4>
                 <ul>
-                    @user.tellerOfStories.foreach { story =>
-                        {<li>@story</li>}
+                    @for(story <- user.tellerOfStories) {
+                        <li>@story</li>
                     }
                 </ul>
                 <h4>@Messages("reader_of_stories")</h4>
                 <ul>
-                    @user.readerOfStories.foreach { story =>
-                        {<li>@story</li>}
+                    @for(story <- user.readerOfStories) {
+                        <li>@story</li>
                     }
                 </ul>
             </div>
         }
+        case _ => {}
     }
     <div style="clear: both" class="cf"></div>
     <h3>@Messages("stories")</h3>
