@@ -15,11 +15,11 @@ object Forms {
       "title" -> nonEmptyText,
       "master" -> nonEmptyText,
       "public" -> boolean,
-      "adult" -> boolean,
+      //"adult" -> boolean,
       "tags" -> text)
-      ((title, master, public, adult, tags) =>
-        Story.create(title, public, adult, toTags(tags), master))
-      (story => Some(story.title, story.master.alias, story.public, story.adult, story.tags.mkString(",")))
+      ((title, master, public, tags) =>
+        Story.create(title, public, false, toTags(tags), master))
+      (story => Some(story.title, story.master.alias, story.public, story.tags.mkString(",")))
   )
 
   /**
@@ -34,11 +34,10 @@ object Forms {
    */
   val profileForm = Form(
     mapping(
-      "openId" -> nonEmptyText,
       "username" -> nonEmptyText,
       "email" -> nonEmptyText,
       "birthday" -> date)
-      (User.create)(u => Some(u.openId, u.username, u.email, u.birthday))
+      (User.create)(u => Some(u.username, u.email, u.birthday))
   )
 
   val tellerSettingsForm = Form(

@@ -2,7 +2,6 @@
 
 aego=aego
 app.title=alter ego, the ultimate RPG chat
-new_story.title=AEGO - a new beginning
 about=About
 home=Home
 stories=Stories
@@ -25,6 +24,18 @@ sign_in_openid=OpenID sign in
 or=or
 yes=Yes
 no=No
+create_profile=Create new user profile
+username=Username
+email=Email
+birthday=Birthday
+profile=My profile
+master_of_stories=Master of stories
+teller_of_stories=Teller of stories
+reader_of_stories=Reader of stories
+own_stories=Own stories
+find_stories=Find stories
+save=Save
+cancel=Cancel
 
 ## messages ##
 

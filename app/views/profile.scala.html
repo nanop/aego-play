@@ -1,0 +1,20 @@
+@(profileForm: Form[User])(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@import hu.jupi.play.authentication._
+@import helper._
+@import helper.twitterBootstrap._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
+
+@main(Messages("profile"), "nav-profile"){
+    <div class="span8 offset2">
+        <h3>@Messages("profile")</h3>
+        @form(routes.Application.editProfileAction, 'class -> "form-horizontal well") {
+            @inputText(profileForm("username"), '_label -> Messages("username"))
+            @inputText(profileForm("email"), '_label -> Messages("email"), '_placeholder -> Messages("user@example.com"))
+            @inputDate(profileForm("birthday"), '_label -> Messages("birthday"))
+            <div class="form-actions">
+                <input type="submit" class="btn btn-primary" value="@Messages("save")" />
+                <input type="reset" class="btn btn-danger" value="@Messages("cancel")" />
+            </div>
+        }
+    </div>
+}

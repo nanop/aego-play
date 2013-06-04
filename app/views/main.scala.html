@@ -1,4 +1,4 @@
-@(title: String, activeNavId: String)(content: Html)(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@(title: String, activeNavId: String = "")(content: Html)(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
 @import hu.jupi.play.authentication._
 
 <!DOCTYPE html>
@@ -23,13 +23,13 @@
                     <li id="nav-index"><a href="@routes.Application.indexAction">@Messages("home")</a></li>
                     <li id="nav-stories"><a href="@routes.Application.storiesAction">@Messages("stories")</a></li>
                 @auth match {
-                    case Authenticated(user) => {
-                    <li id="nav-create-story"><a href="@routes.Application.newStoryFormAction">@Messages("create_story")</a></li>
+                    case Authenticated(user: User) => {
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                            @user <b class="caret"></b>
+                            @user.username <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
+                            <li id="nav-profile"><a href="@routes.Application.profileAction">@Messages("profile")</a></li>
                             <li><a href="@routes.Application.signOutAction">@Messages("sign_out")</a></li>
                         </ul>
                     </li>

@@ -17,8 +17,7 @@ GET     /sign-in-google     controllers.Application.signInGoogleAction
 GET     /sign-out           controllers.Application.signOutAction
 GET     /openid             controllers.Application.openIdCallbackAction
 GET     /profile            controllers.Application.profileAction
-GET     /profile/new        controllers.Application.profileFormAction
-GET     /profile/edit       controllers.Application.profileFormAction
+GET     /profile/edit       controllers.Application.editProfileAction
 POST    /profile/new        controllers.Application.createProfileAction
 
 # JUST for development, TODO remove

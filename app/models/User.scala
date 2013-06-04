@@ -20,14 +20,14 @@ case class User(openId: String,
                 username: String,
                 email: String,
                 birthday: Date,
-                online: Boolean,
-                readerOfStories: Seq[Story],
-                tellerOfStories: Seq[Story],
-                masterOfStories: Seq[Story])
+                online: Boolean = true,
+                readerOfStories: Seq[Story] = Nil,
+                tellerOfStories: Seq[Story] = Nil,
+                masterOfStories: Seq[Story] = Nil)
 
 object User {
   implicit val format = Json.format[User]
 
-  def create(openId: String, username: String, email: String, birthday: Date) =
-    User(openId, username, email, birthday, true, Nil, Nil, Nil)
+  def create(username: String, email: String, birthday: Date) =
+    User("", username, email, birthday)
 }

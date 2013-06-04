@@ -14,7 +14,7 @@ import play.api.Play.current
 import play.api.libs.openid.OpenID
 import scala.concurrent.Future
 import play.api.Logger
-import hu.jupi.play.authentication.Authentication
+import hu.jupi.play.authentication.{Authenticated, Authentication}
 
 object Application extends Controller with MongoController with Authentication[User] {
 
@@ -230,10 +230,11 @@ object Application extends Controller with MongoController with Authentication[U
       OpenID.verifiedId flatMap {
         info =>
           users.find(Json.obj("openId" -> info.id)).one[User] map (_ match {
-            case Some(user: User) => Ok(views.html.profile()).withSession(OPEN_ID_SESSION_KEY -> user.openId)
-            case _ => Redirect(routes.Application.createProfileAction).withSession(OPEN_ID_SESSION_KEY -> info.id)
+            case Some(user: User) =>
+              Ok(views.html.profile(Forms.profileForm.fill(user))).withSession(OPEN_ID_SESSION_KEY -> user.openId)
+            case _ => Ok(views.html.createProfile(Forms.profileForm)).withSession(OPEN_ID_SESSION_KEY -> info.id)
           }
-        )
+            )
       }
     }
   }
@@ -249,14 +250,21 @@ object Application extends Controller with MongoController with Authentication[U
       Redirect(referrer).withLang(Lang(lang))
   }
 
-  /**
-   * Fet
-   * @return
-   */
-  def profileFormAction = TODO
+  def createProfileAction = WithAuthentication {
+    implicit request =>
+      Forms.profileForm.bindFromRequest() fold(errors => BadRequest(views.html.createProfile(errors)),
+        data => Async {
+          for (lastError <- users.insert(data.copy(openId = request.session.get(OPEN_ID_SESSION_KEY).get)))
+          yield Redirect(routes.Application.profileAction())
+        })
+  }
 
-  def createProfileAction = TODO
+  def editProfileAction = TODO
 
-  def profileAction = TODO
+  def profileAction = WithAuthentication {
+    implicit request => request match { case Authenticated(user: User) =>
+      Ok(views.html.profile(Forms.profileForm.fill(user)))
+    }
+  }
 
 }

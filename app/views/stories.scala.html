@@ -9,6 +9,34 @@
 }
 
 @main(Messages("stories"), "nav-stories") {
+    @auth match {
+        case Authenticated(user: User) => {
+            <div class="span8 offset2">
+                <h3>@Messages("own_stories")</h3>
+                <a class="btn btn-primary cf" href="@routes.Application.newStoryAction">@Messages("create_story")</a>
+                <h4>@Messages("master_of_stories")</h4>
+                <ul>
+                    @user.masterOfStories.foreach { story =>
+                        {<li>@story</li>}
+                    }
+                </ul>
+                <h4>@Messages("teller_of_stories")</h4>
+                <ul>
+                    @user.tellerOfStories.foreach { story =>
+                        {<li>@story</li>}
+                    }
+                </ul>
+                <h4>@Messages("reader_of_stories")</h4>
+                <ul>
+                    @user.readerOfStories.foreach { story =>
+                        {<li>@story</li>}
+                    }
+                </ul>
+            </div>
+        }
+    }
+    <div style="clear: both" class="cf"></div>
+    <h3>@Messages("stories")</h3>
     <table class="table table-hover">
         <thead>
             <tr>

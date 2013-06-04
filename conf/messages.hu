@@ -2,7 +2,6 @@
 
 aego=aego
 app.title=alter ego, a szerepjáték cset
-new_story.title=aego - egy új történet kezdete
 about=Mi ez?
 home=Kezdőlap
 stories=Történetek
@@ -25,6 +24,18 @@ sign_in_openid=OpenID bejelentkezés
 or=vagy
 yes=Igen
 no=Nem
+create_profile=Új felhasználói profil létrehozása
+username=Felhasználónév
+email=E-mail
+birthday=Születésnap
+profile=Személyes profilom
+master_of_stories=Mestere, fő szerzője
+teller_of_stories=Mesélője, írója
+reader_of_stories=Olvasója
+own_stories=Saját történetek
+find_stories=Történetek keresése
+save=Mentés
+cancel=Mégsem
 
 ## messages ##
 

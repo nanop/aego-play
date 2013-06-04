@@ -4,18 +4,18 @@
 @import helper.twitterBootstrap._
 @implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
-@main(Messages("new_story.title"), "nav-create-story") {
+@main(Messages("create_story"), "nav-create-story") {
     <div class="span8 offset2">
-    @form(routes.Application.newStoryAction, 'class -> "form-horizontal well") {
-        @inputText(newStoryForm("title"), '_label -> Messages("story_title"))
-        @inputText(newStoryForm("master"), '_label -> Messages("alias"), '_placeholder -> Messages("game_master"))
-        @checkbox(newStoryForm("public"), '_label -> Messages("public"))
-        @checkbox(newStoryForm("adult"), '_label -> Messages("adult_content_enabled"))
-        @inputText(newStoryForm("tags"), '_label -> Messages("tags"))
-        <p>TODO: add captcha</p>
-        <div class="form-actions">
-            <input type="submit" class="btn btn-primary" value="@Messages("create")">
-        </div>
-    }
+        <h3>@Messages("create_story")</h3>
+        @form(routes.Application.newStoryAction, 'class -> "form-horizontal well") {
+            @inputText(newStoryForm("title"), '_label -> Messages("story_title"))
+            @inputText(newStoryForm("master"), '_label -> Messages("alias"), '_placeholder -> Messages("game_master"))
+            @checkbox(newStoryForm("public"), '_label -> Messages("public"))
+            @checkbox(newStoryForm("adult"), '_label -> Messages("adult_content_enabled"))
+            @inputText(newStoryForm("tags"), '_label -> Messages("tags"))
+            <div class="form-actions">
+                <input type="submit" class="btn btn-primary" value="@Messages("create")">
+            </div>
+        }
     </div>
 }
