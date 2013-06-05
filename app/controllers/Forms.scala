@@ -2,8 +2,9 @@ package controllers
 
 import play.api.data.Form
 import play.api.data.Forms._
+import play.api.data.validation.Constraints._
 import scala.Some
-import models.{User, Story}
+import models.{StoryFilter, User, Story}
 
 object Forms {
 
@@ -32,16 +33,20 @@ object Forms {
   /**
    * Create/edit profile form.
    */
-  val profileForm = Form(
+  val profile = Form(
     mapping(
       "username" -> nonEmptyText,
-      "email" -> nonEmptyText,
+      "email" -> email.verifying(nonEmpty),
       "birthday" -> date)
       (User.create)(u => Some(u.username, u.email, u.birthday))
   )
 
-  val tellerSettingsForm = Form(
+  val tellerSettings = Form(
     tuple("alias" -> nonEmptyText, "color" -> nonEmptyText)
+  )
+
+  val storyFilter = Form(
+    mapping("title" -> optional(text), "tag" -> optional(text))(StoryFilter.apply)(StoryFilter.unapply)
   )
 
   /**

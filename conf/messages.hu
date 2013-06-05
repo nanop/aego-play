@@ -36,14 +36,23 @@ own_stories=Saját történetek
 find_stories=Történetek keresése
 save=Mentés
 cancel=Mégsem
+filter=Szűrés
+tag=Címke
+public_stories=Nyilvános történetek
+svg_logo=Vektorgrafikus logo
+
+error.email=Kérlek érvényes e-mail címet adj meg
+error.required=Kérlek töltsd ki ezt a mezőt
+error.date=Kérlek érvényes dátumot adj meg
 
 ## messages ##
 
 ## definitions, notes, descriptions, long sentences ##
-d.about=Az <b>aego ingyenes cset</b> web alkalmazás és platform, speciálisan <b>szerepjátékra</b> és <b>közösségi történetírásra</b> tervezve.
+d.about=Az <b>aego</b>, avagy alter ego, egy olyan <b>ingyenes cset</b> web alkalmazás és platform, ami speciálisan <b>szerepjátékra</b> és <b>közösségi történetírásra</b> tervezve.
 d.stories=Csodás történetekhez és kaladokhoz csatlakozahtsz játékosként vagy társszerzőként. A történetek a hagyományos csetek szobáinak felelnek meg.
 d.sign_in=A kalandokban való részvétehez be kell jelentkezned. Google vagy más OpenID azonosítóval jelentkezhetsz be. Az Aego nem gyűjt és nem tárol személyes adatokat.
 d.sign_out=Ne felejts el kijelentkezni közösen használt számítógép esetén.
+d.thanks=Köszönöm az érdelődésedet. Ez az alkalmazás még félkész, csevegésre nem használható. Tulajdonképpen a ELTE-s diplomamunkámat képezi, ezért így is marad örökké. :)
 
 ## Untranslated / special ##
 language=magyar

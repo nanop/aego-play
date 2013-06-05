@@ -9,24 +9,28 @@
     <div class="span4">
         <h3>@Messages("about")</h3>
         <p>@Html(Messages("d.about"))</p>
-        <p><a class="btn" href="#">@Messages("user_guide")</a></p>
+        <p><a class="btn btn-primary" href="@routes.Application.aboutAction">
+				<i class="icon-white icon-info-sign"></i> @Messages("user_guide")</a></p>
     </div>
     <div class="span4">
         <h3>@Messages("stories")</h3>
         <p>@Messages("d.stories")</p>
-        <p><a class="btn" href="@routes.Application.storiesAction">@Messages("story_list")</a></p>
+        <p><a class="btn btn-primary" href="@routes.Application.storiesAction">
+				<i class="icon-white icon-file"></i> @Messages("stories")</a></p>
     </div>
     <div class="span4">
     @auth match {
         case Guest() => {
             <h3>@Messages("sign_in")</h3>
             <p>@Messages("d.sign_in")</p>
-            <p><a class="btn btn-primary" href="@routes.Application.loginPageAction">@Messages("sign_in")</a></p>
+            <p><a class="btn btn-primary" href="@routes.Application.loginPageAction">
+					<i class="icon-white icon-chevron-right"></i> @Messages("sign_in")</a></p>
         }
         case _ => {
             <h3>@Messages("sign_out")</h3>
             <p>@Messages("d.sign_out")</p>
-            <p><a class="btn btn-primary" href="@routes.Application.loginPageAction">@Messages("sign_out")</a></p>
+            <p><a class="btn btn-primary" href="@routes.Application.loginPageAction">
+					<i class="icon-white icon-off"></i> @Messages("sign_out")</a></p>
         }
     }
     </div>

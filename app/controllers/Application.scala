@@ -5,7 +5,7 @@ import play.api.cache.Cache
 import play.modules.reactivemongo._
 import play.modules.reactivemongo.json.collection.JSONCollection
 import models._
-import play.api.libs.json.Json
+import play.api.libs.json._
 import play.api.libs.json.Json._
 import reactivemongo.api.Cursor
 import play.api.libs.Codecs
@@ -15,7 +15,7 @@ import play.api.Play.current
 import play.api.libs.openid.OpenID
 import scala.concurrent.Future
 import play.api.Logger
-import hu.jupi.play.authentication.{Authenticated, Authentication}
+import hu.jupi.play.authentication._
 
 object Application extends Controller with MongoController with Authentication[User] {
 
@@ -82,16 +82,21 @@ object Application extends Controller with MongoController with Authentication[U
   def storiesAction = WithAuthentication {
     implicit request =>
       Async {
-        val cursor: Cursor[Story] = stories.find(Json.obj()).cursor[Story]
-        val storiesFuture = cursor.toList
-        storiesFuture map (s => Ok(views.html.stories(s)))
+		for {
+		  public <- stories.find(Json.obj("public" -> true)).cursor[Story].toList
+		  own <- ownStories(request)
+		} yield Ok(views.html.stories(public, own, Forms.storyFilter))
       }
   }
 
   /**
    * @return Action to show new story form.
    */
-  def newStoryFormAction = WithAuthentication(implicit request => Ok(views.html.newStoryForm(Forms.newStory)))
+  def newStoryFormAction = WithAuthentication(
+    implicit request => request match {
+      case Authenticated(_) => Ok(views.html.newStoryForm(Forms.newStory))
+      case _ => Unauthorized(views.html.signIn(Forms.signIn))
+    })
 
   /**
    * Creates a new story.
@@ -111,9 +116,10 @@ object Application extends Controller with MongoController with Authentication[U
                 insertStory <- stories.insert(story)
                 modifier = Json.obj("$addToSet" -> Json.obj("masterOfStories" -> id))
                 updateUser <- users.update(Json.obj("openId" -> user.openId), modifier)
-              } yield Redirect(routes.Application.storyBoardAction(id))
+              } yield Redirect(routes.Application.storiesAction)
             }
           )
+        case _ => Unauthorized(views.html.signIn(Forms.signIn))
       }
 
   }
@@ -157,7 +163,7 @@ object Application extends Controller with MongoController with Authentication[U
   def storyBoardAction(storyId: String) = WithAuthentication(
     implicit request => Async {
       for(story <- stories.find(Json.obj("id" -> storyId)).one[Story])
-      yield Ok(views.html.storyBoard(story.get, Forms.tellerSettingsForm))
+      yield Ok(views.html.storyBoard(story.get, Forms.tellerSettings))
     }
   )
 
@@ -259,7 +265,7 @@ object Application extends Controller with MongoController with Authentication[U
           users.find(Json.obj("openId" -> info.id)).one[User] map (_ match {
             case Some(user: User) =>
               Redirect(routes.Application.indexAction()).withSession(OPEN_ID_SESSION_KEY -> user.openId)
-            case _ => Ok(views.html.createProfile(Forms.profileForm)).withSession(OPEN_ID_SESSION_KEY -> info.id)
+            case _ => Ok(views.html.createProfile(Forms.profile)).withSession(OPEN_ID_SESSION_KEY -> info.id)
           })
       }
     }
@@ -278,19 +284,58 @@ object Application extends Controller with MongoController with Authentication[U
 
   def createProfileAction = WithAuthentication {
     implicit request =>
-      Forms.profileForm.bindFromRequest() fold(errors => BadRequest(views.html.createProfile(errors)),
+      Forms.profile.bindFromRequest() fold(errors => BadRequest(views.html.createProfile(errors)),
         data => Async {
           for (lastError <- users.insert(data.copy(openId = request.session.get(OPEN_ID_SESSION_KEY).get)))
           yield Redirect(routes.Application.storiesAction())
         })
   }
 
-  def editProfileAction = TODO
+  def editProfileAction = WithAuthentication( implicit request =>
+    request match {
+      case Authenticated(user: User) =>
+        Forms.profile.bindFromRequest() fold (
+          error => BadRequest(views.html.profile(error)),
+          data => Async {
+            users.update(Json.obj("openId" -> user.openId), Json.obj("$set" -> Json.obj(
+              "username" -> data.username, "email" -> data.email, "birthday" -> data.birthday))) map (lastError =>
+              Ok(views.html.profile(Forms.profile)))
+          }
+        )
+      case _ => Unauthorized(views.html.signIn(Forms.signIn))
+    }
+  )
 
   def profileAction = WithAuthentication {
     implicit request => request match { case Authenticated(user: User) =>
-      Ok(views.html.profile(Forms.profileForm.fill(user)))
+      Ok(views.html.profile(Forms.profile.fill(user)))
     }
+  }
+
+  def ownStories(auth: WithAuthentication): Future[List[Story]] = {
+	auth match {
+	  case Authenticated(user: User) => stories.find(
+		  Json.obj("id" -> Json.obj("$in" -> user.masterOfStories))).cursor[Story].toList
+	  case _ => Future(Nil)
+	}
+  }
+  
+  def filterStoriesAction = WithAuthentication {
+    implicit request => Forms.storyFilter.bindFromRequest() fold (
+      errors => Redirect(routes.Application.storiesAction),
+      data => Async {
+        val criteria = for {
+		  c <- List("title" -> data.title, "tags" -> data.tag) if !c._2.isEmpty
+		} yield (c._1, Json.obj("$regex" -> c._2.get))
+       for {
+		 public <- stories.find(JsObject(("public" -> JsBoolean(true) :: criteria))).cursor[Story].toList
+		 own <- ownStories(request)
+	   } yield Ok(views.html.stories(public, own, Forms.storyFilter.fill(data)))
+      })
+  }
+  
+  def aboutAction = WithAuthentication {
+	implicit request => Ok(views.html.about())
   }
 
 }

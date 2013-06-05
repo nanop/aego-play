@@ -46,7 +46,6 @@ class ApplicationSpec extends Specification {
       story.public mustEqual formValues("public").toBoolean
       story.id must not be empty
       story.master.alias mustEqual formValues("master")
-      story.readerIds must beEmpty
       story.storyTellers must beEmpty
       story.title mustEqual formValues("title")
       story.tags mustEqual formValues("tags").split(",").toSeq

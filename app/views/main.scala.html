@@ -20,8 +20,12 @@
         <div class="container">
             <div class="masthead">
                 <ul class="nav nav-pills pull-right">
-                    <li id="nav-index"><a href="@routes.Application.indexAction">@Messages("home")</a></li>
-                    <li id="nav-stories"><a href="@routes.Application.storiesAction">@Messages("stories")</a></li>
+                    <li id="nav-index"><a href="@routes.Application.indexAction">
+							<i class="icon-home"></i> @Messages("home")</a></li>
+                    <li id="nav-stories"><a href="@routes.Application.storiesAction">
+							<i class="icon-file"></i> @Messages("stories")</a></li>
+					<li id="nav-about"><a href="@routes.Application.aboutAction">
+							<i class="icon-info-sign"></i> @Messages("user_guide")</a></li>
                 @auth match {
                     case Authenticated(user: User) => {
                     <li class="dropdown">
@@ -29,12 +33,14 @@
                             <i class="icon-user"></i> @user.username <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li id="nav-profile"><a href="@routes.Application.profileAction">@Messages("profile")</a></li>
-                            <li><a href="@routes.Application.signOutAction">@Messages("sign_out")</a></li>
+                            <li id="nav-profile"><a href="@routes.Application.profileAction">
+									<i class="icon-wrench"></i> @Messages("profile")</a></li>
+                            <li><a href="@routes.Application.signOutAction"><i class="icon-off"></i> @Messages("sign_out")</a></li>
                         </ul>
                     </li>
                     } case _ => {
-                        <li id="nav-sign-in"><a href="@routes.Application.loginPageAction">@Messages("sign_in")</a></li>
+                        <li id="nav-sign-in"><a href="@routes.Application.loginPageAction"> 
+								<i class="icon-chevron-right"></i> @Messages("sign_in")</a></li>
                     }
                 }
                 </ul>

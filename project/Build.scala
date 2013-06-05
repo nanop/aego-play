@@ -6,6 +6,7 @@ object ApplicationBuild extends Build {
 
   val appName = "aego-play"
   val appVersion = "1.0-SNAPSHOT"
+  val scalaVersion = "2.10.0"
 
   val appDependencies = Seq(
     "org.reactivemongo" %% "play2-reactivemongo" % "0.9"

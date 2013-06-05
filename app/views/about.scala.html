@@ -1,0 +1,12 @@
+@()(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@import hu.jupi.play.authentication._
+
+@main(Messages("app.title"), "nav-about"){
+	<div class="text-center">
+		<img src="@routes.Assets.at("img/aego600anim.gif")" alt="Aego 600dpi animation" style="vertical-align: top"/>
+		<h6>@Messages("d.thanks")</h6>
+		<a href="http://www.btk.elte.hu/file/elte_megeri_video.flv" style="display:block;width:515px;height:282px;margin:0 auto" id="player-DB-184928"><object width="100%" height="100%" id="player-DB-184928_api" data="http://releases.flowplayer.org/swf/flowplayer-3.2.7.swf" type="application/x-shockwave-flash"><param name="allowfullscreen" value="true"><param name="allowscriptaccess" value="always"><param name="quality" value="high"><param name="cachebusting" value="false"><param name="bgcolor" value="#000000"><param name="flashvars" value="config={&quot;playerId&quot;:&quot;player-DB-184928&quot;,&quot;clip&quot;:{&quot;url&quot;:&quot;http://www.btk.elte.hu/file/elte_megeri_video.flv&quot;},&quot;playlist&quot;:[{&quot;url&quot;:&quot;http://www.btk.elte.hu/file/elte_megeri_video.flv&quot;}]}"></object></a>
+		<hr />
+		<a href="@routes.Assets.at("img/aego.svg")">@Messages("svg_logo")</a>
+	</div>
+}

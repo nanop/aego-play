@@ -36,14 +36,23 @@ own_stories=Own stories
 find_stories=Find stories
 save=Save
 cancel=Cancel
+filter=Filter
+tag=Tag
+public_stories=Public stories
+svg_logo=Vectorgraphic logo
+
+error.email=Please enter a valid email address
+error.required=Please fill this field
+error.date=Please enter a valid date
 
 ## messages ##
 
 ## definitions, notes, descriptions, long sentences ##
-d.about=Aego is a free chat application. Aego is designed to support playing role playing games.
+d.about=Aego or alter ego is a free chat application. Aego is designed to support playing role playing games.
 d.stories=There are some wonderful ongoing stories and adventures you can join with your alter egos to play or co-author. Stories are like chatrooms of other chats apps.
 d.sign_in=To be engaged in fascinating adventures you should sign in. You can sign in with your facebook, twitter or tumblr account. This application will not store any personal information and will not publish unwanted content to social networks.
 d.sign_out=Do not forget to sign out on public machines.
+d.thanks=Thanks for your interest. This application is semi-finished, it cannot be used to chat. It is actually my thesis work for University of Eötvös Lorand, so it stays like this forever. :)
 
 ## Untranslated / special ##
 language=english

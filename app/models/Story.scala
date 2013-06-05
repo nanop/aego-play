@@ -40,6 +40,8 @@ case class Story(id: String,
                  master: StoryTeller,
                  storyTellers: Seq[StoryTeller] = Nil)
 
+case class StoryFilter(title: Option[String], tag: Option[String])
+
 object Story {
 
   /**

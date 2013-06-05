@@ -1,57 +1,80 @@
-@(stories: List[Story])(implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
+@(stories: List[Story], ownStories: List[Story], filterForm: Form[StoryFilter])(
+implicit lang: Lang, auth: hu.jupi.play.authentication.WithAuthentication)
 @import hu.jupi.play.authentication._
 @import tags._
+@import helper._
+@import helper.twitterBootstrap._
+@implicitFieldConstructor = @{ FieldConstructor(twitterBootstrapInput.f) }
 
 @main(Messages("stories"), "nav-stories") {
-    @auth match {
-        case Authenticated(user: User) => {
-            <div class="span8 offset2">
-                <h3>@Messages("own_stories")</h3>
-                <a class="btn btn-primary cf" href="@routes.Application.newStoryAction">@Messages("create_story")</a>
-                <h4>@Messages("master_of_stories")</h4>
-                <ul>
-                    @for(story <- user.masterOfStories) {
-                        <li>@story</li>
-                    }
-                </ul>
-                <h4>@Messages("teller_of_stories")</h4>
-                <ul>
-                    @for(story <- user.tellerOfStories) {
-                        <li>@story</li>
-                    }
-                </ul>
-                <h4>@Messages("reader_of_stories")</h4>
-                <ul>
-                    @for(story <- user.readerOfStories) {
-                        <li>@story</li>
-                    }
-                </ul>
-            </div>
+	<div class="span8 offset2">
+		@auth match {
+			case Authenticated(user: User) => {
+				<div class="form-actions">
+					<a class="btn btn-primary" href="@routes.Application.newStoryAction">@Messages("create_story")</a>
+				</div>
+				<h3>@Messages("own_stories")</h3>
+				<table class="table table-hover cf">
+					<thead>
+						<tr>
+							<th>@Messages("title")</th>
+							<th>@Messages("alias")</th>
+							<th>@Messages("public")</th>
+							<th>@Messages("adult_content_enabled")</th>
+							<th>@Messages("tags")</th>
+						</tr>
+					</thead>
+					<tbody>
+					@for(story <- ownStories) {
+						<tr>
+							<td>@story.title</td>
+							<td>@story.master.alias</td>
+							<td>@toYesNo(story.public)</td>
+							<td>@toYesNo(story.adult)</td>
+							<td>@story.tags.mkString(", ")</td>
+						</tr>
+					}
+					</tbody>
+				</table>
+			}
+			case _ => {}
+		}
+    
+		<h3>@Messages("public_stories")</h3>
+		@form(routes.Application.filterStoriesAction, 'class -> "form-horizontal") {
+			<fieldset>
+				<legend>@Messages("filter")</legend>
+				@inputText(filterForm("title"), 'label -> Messages("title"))
+				@inputText(filterForm("tag"), 'label -> Messages("tag"))
+			</fieldset>
+			<div class="form-actions">
+				<button type="submit" class="btn btn-primary">
+					<i class="icon-white icon-filter"></i> @Messages("filter")
+				</button>
+			</div>
         }
-        case _ => {}
-    }
-    <div style="clear: both" class="cf"></div>
-    <h3>@Messages("stories")</h3>
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th>@Messages("title")</th>
-                <th>@Messages("started_by")</th>
-                <th>@Messages("public")</th>
-                <th>@Messages("adult_content_enabled")</th>
-                <th>@Messages("tags")</th>
-            </tr>
-        </thead>
-        <tbody>
-        @stories.map { story =>
-            <tr>
-                <td><a href="@routes.Application.storyBoardAction(story.id)">@story.title</a></td>
-                <td>@story.master.alias</td>
-                <td>@toYesNo(story.public)</td>
-                <td>@toYesNo(story.adult)</td>
-                <td>@story.tags.mkString(", ")</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+
+		<table class="table table-hover">
+			<thead>
+				<tr>
+					<th>@Messages("title")</th>
+					<th>@Messages("started_by")</th>
+					<th>@Messages("public")</th>
+					<th>@Messages("adult_content_enabled")</th>
+					<th>@Messages("tags")</th>
+				</tr>
+			</thead>
+			<tbody>
+			@stories.map { story =>
+				<tr>
+					<td>@story.title</td>
+					<td>@story.master.alias</td>
+					<td>@toYesNo(story.public)</td>
+					<td>@toYesNo(story.adult)</td>
+					<td>@story.tags.mkString(", ")</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
 }

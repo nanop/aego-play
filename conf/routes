@@ -4,6 +4,7 @@
 
 GET     /                   controllers.Application.indexAction
 GET     /stories            controllers.Application.storiesAction
+POST	/stories			controllers.Application.filterStoriesAction
 GET     /stories/new        controllers.Application.newStoryFormAction
 POST    /stories/new        controllers.Application.newStoryAction
 GET     /stories/:storyId   controllers.Application.storyBoardAction(storyId: String)
@@ -19,6 +20,7 @@ GET     /openid             controllers.Application.openIdCallbackAction
 GET     /profile            controllers.Application.profileAction
 GET     /profile/edit       controllers.Application.editProfileAction
 POST    /profile/new        controllers.Application.createProfileAction
+GET		/about				controllers.Application.aboutAction
 
 # JUST for development, TODO remove
 GET     /cleanDB    controllers.Application.cleanDbAction

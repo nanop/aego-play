@@ -9,10 +9,10 @@
     <div class="span8 offset2 well">
         <h3></h3>
         <ul>
-            <li><span>@Messages("started_by")</span><span>@story.master.alias</span></li>
-            <li><span>@Messages("public")</span><span>@toYesNo(story.public)</span></li>
-            <li><span>@Messages("adult_content_enabled")</span><span>@toYesNo(story.adult)</span></li>
-            <li><span>@Messages("tags")</span><span>@story.tags.mkString(", ")</span></li>
+            <li><span>@Messages("started_by"): </span><span>@story.master.alias</span></li>
+            <li><span>@Messages("public"): </span><span>@toYesNo(story.public)</span></li>
+            <li><span>@Messages("adult_content_enabled"): </span><span>@toYesNo(story.adult)</span></li>
+            <li><span>@Messages("tags"): </span><span>@story.tags.mkString(", ")</span></li>
         </ul>
         <h4>@Messages("be_teller")</h4>
         @form(routes.Application.newStoryAction, 'class -> "form-horizontal well") {

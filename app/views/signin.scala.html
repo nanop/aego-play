@@ -6,7 +6,7 @@
 @main(Messages("sign_in"), "nav-sign-in") {
     <div class="well text-center">
         <img src="@routes.Assets.at("img/google.png")" alt="google logo" onclick="location.href='@routes.Application.signInGoogleAction'" />
-        <button class="btn btn-info" onclick="location.href='@routes.Application.signInGoogleAction'">@Messages("sign_in_google")</button>
+        <a href="@routes.Application.signInGoogleAction" class="btn btn-info">@Messages("sign_in_google")</a>
     </div>
     <p class="text-center" style="margin-bottom: 20px">@Messages("or")</p>
     @form(routes.Application.signInOpenIdAction, 'class -> "form-inline well text-center") {
