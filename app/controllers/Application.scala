@@ -299,7 +299,7 @@ object Application extends Controller with MongoController with Authentication[U
           data => Async {
             users.update(Json.obj("openId" -> user.openId), Json.obj("$set" -> Json.obj(
               "username" -> data.username, "email" -> data.email, "birthday" -> data.birthday))) map (lastError =>
-              Ok(views.html.profile(Forms.profile)))
+              Ok(views.html.profile(Forms.profile.fill(data))))
           }
         )
       case _ => Unauthorized(views.html.signIn(Forms.signIn))
